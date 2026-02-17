@@ -1,4 +1,5 @@
 import pyodbc
+from datetime import datetime  # Added for unique filenames/timestamps
 
 conn = pyodbc.connect(
     'Driver={SQL Server};'
@@ -18,9 +19,24 @@ def view_menu():
         print(f"ID: {r.item_id} | Name: {r.item_name} | Price:{r.price}")
     print()
 
-def print_final_bill(items,grand_total):
-    print("\n========== Final Hotel Bill ==============")
+def save_bill_to_file(items, grand_total):
+    """Saves the final bill into a .txt file"""
+    filename = f"Receipt_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
+    
+    with open(filename, "w") as f:
+        f.write("========== HOTEL RECEIPT ==========\n")
+        f.write(f"Date: {datetime.now()}\n")
+        f.write("-----------------------------------\n")
+        for item in items:
+            f.write(f"{item['name']} | Qty: {item['qty']} | Total: {item['total']}\n")
+        f.write("-----------------------------------\n")
+        f.write(f"GRAND TOTAL: {grand_total}\n")
+        f.write("===================================\n")
+    
+    print(f"Digital receipt saved as: {filename}")
 
+def print_final_bill(items, grand_total):
+    print("\n========== Final Hotel Bill ==============")
     for item in items:
         print(f"{item['name']} | Qty:{item['qty']} | Total: {item['total']}")
     
@@ -49,10 +65,8 @@ def take_order():
 
         cursor.execute("INSERT INTO Orders(item_id,quantity,total_price) VALUES (?, ? ,?)",(item_id,qty,total))
 
-
         items.append({"name": name,"qty":qty ,"total":total})
         grand_total += float(total)
-
 
         more = input("Add more items? (y/n): ").lower()
         if more != 'y':
@@ -61,7 +75,10 @@ def take_order():
     conn.commit()
 
     print("\n Order placed successfully !")
-    print_final_bill(items,grand_total)
+    print_final_bill(items, grand_total)
+    
+    # CALLING FILE HANDLING HERE
+    save_bill_to_file(items, grand_total)
             
 
 def view_orders():
@@ -103,5 +120,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()        
-
+    main()
