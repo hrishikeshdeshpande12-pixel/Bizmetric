@@ -672,9 +672,90 @@ def calculate_age(dob):
     return current_year - birth_year
 print(calculate_age("02-02-2000"))
 # 47.	Create a function to check age eligibility for given customer based on DOB. Function will take two input DOB and ELIGIBILITY age.
+from datetime import datetime
+
+def check_eligibility(dob, eligibility_age):
+    # dob format: "YYYY-MM-DD"
+    birth_date = datetime.strptime(dob, "%Y-%m-%d")
+    today = datetime.today()
+    
+    age = today.year - birth_date.year - (
+        (today.month, today.day) < (birth_date.month, birth_date.day)
+    )
+    
+    if age >= eligibility_age:
+        return f"Eligible (Age: {age})"
+    else:
+        return f"Not Eligible (Age: {age})"
+
+# Example
+print(check_eligibility("2000-05-15", 18))
+
 # 48.	Create a function to check if string is palindrome or not ? For example, if input is NITIN then reverse of the string is same then it is palindrome. If input is ANIL then reverse is LINA which is not same then it is not palindrome.  
+def is_palindrome(string):
+    string = string.upper()
+    if string == string[::-1]:
+        return "Palindrome"
+    else:
+        return "Not Palindrome"
+
+# Example
+print(is_palindrome("NITIN"))
+print(is_palindrome("ANIL"))
+
 # 49.	Create a function to generate a Fibonacci Series. 0 1 1 2 3 5 8 13 21 34 …..  upto 100 
+def fibonacci_upto_100():
+    a, b = 0, 1
+    while a <= 100:
+        print(a, end=" ")
+        a, b = b, a + b
+
+# Example
+fibonacci_upto_100()
+
 # 50.	Write a code to generate factorial of the number  For example: factorial of 5 = 5! = 5*4*3*2*1
+def factorial(n):
+    result = 1
+    for i in range(1, n + 1):
+        result *= i
+    return result
+
+# Example
+print("Factorial of 5:", factorial(5))
+
 # 51.	Write a program to find largest number in the list.
+def find_largest(lst):
+    largest = lst[0]
+    for num in lst:
+        if num > largest:
+            largest = num
+    return largest
+
+# Example
+numbers = [10, 45, 23, 67, 89, 34]
+print("Largest number:", find_largest(numbers))
+
 # 52.	Write a program to check frequency of each element in the list.
+def frequency_of_elements(lst):
+    freq = {}
+    for item in lst:
+        if item in freq:
+            freq[item] += 1
+        else:
+            freq[item] = 1
+    return freq
+
+# Example
+numbers = [1, 2, 2, 3, 3, 3, 4]
+print("Frequency:", frequency_of_elements(numbers))
+
 # 53.	There are two string l1 =[ 1,2,3,4,5] and l2 =[3,2,8,7,9] then write a program to find common elements in the list.
+def common_elements(l1, l2):
+    return list(set(l1) & set(l2))
+
+# Example
+l1 = [1, 2, 3, 4, 5]
+l2 = [3, 2, 8, 7, 9]
+print("Common elements:", common_elements(l1, l2))
+
+
